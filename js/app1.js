@@ -25,17 +25,45 @@ function create() {
     player = game.add.sprite(0,0,"player");
 
     //scale the player
-    player.scale.setTo(5,5);
+    player.scale.setTo(7,7);
 
     //enable physics for player
     game.physics.arcade.enable(player);
 
     //change player's physics settings
-    player.body.gravity.y = 300;
+    player.body.gravity.y = 1000;
     player.body.collideWorldBounds = true;
 
 }
 
 function update() {
-    game.physics.arcade.collide(player,floor);
+    playerCollisions();
+    playerMovement();
+    
+}
+
+var playerTouchingGround;
+function playerCollisions(){
+    playerTouchingGround = game.physics.arcade.collide(player,floor);
+    
+}
+
+function playerMovement(){
+    //check for l/r movement
+    if(cursors.left.isDown){
+        player.body.velocity.x = -300;
+        //play left animation
+    }
+    else if(cursors.right.isDown){
+        player.body.velocity.x = 300;
+        //play right animation
+    }
+    else{
+        player.body.velocity.x = 0;
+    }
+
+    //check for jumps
+    if(cursors.up.isDown && player.body.touching.down && playerTouchingGround){
+        player.body.velocity.y = -650;
+    }
 }
