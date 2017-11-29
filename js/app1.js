@@ -6,7 +6,7 @@ function preload() {
     game.load.image("floor", "images/background_new.png");
     //game.load.image("player", "images/player1.png");
     //*Loads the Spritesheet for the player sprite moving*//
-    game.load.spritesheet("player","images/playerMove.png", 19, 28, 3);
+    game.load.spritesheet("player","images/playerMove.png", 19, 28, 5);
     cursors = game.input.keyboard.createCursorKeys();
 }
 var player, floor;
@@ -27,7 +27,9 @@ function create() {
     //add the player
     player = game.add.sprite(0,0,"player");
     //*creates the "Walk" animation*//
-    player.animations.add('walk', [0, 1, 2]);
+    player.animations.add('walk', [0, 2, 1]);
+    //*creates the "Attack" animation*//
+    player.animations.add('attack',[0, 3,4]);
 
     //scale the player
     player.scale.setTo(7,7);
@@ -94,6 +96,16 @@ function playerMovement(){
     {
         //*When the left cursor and the right cursor are up, stops the walk animation*//
         player.animations.stop('walk',true);
+    }
+
+    //Handles the event where the player left clicks and the attack animation plays
+    if(game.input.activePointer.isDown == true)
+    {
+        player.animations.play('attack', 10, false);
+    }
+    else
+    {
+        player.animations.stop('attack', true);
     }
 
 
