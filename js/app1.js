@@ -1,4 +1,4 @@
-var game = new Phaser.Game(1600, 900, Phaser.AUTO, '', { preload: preload, create: create, update: update },false,false);
+var game = new Phaser.Game(1600, 900, Phaser.AUTO, '', { preload: preload, create: create, update: update }, false, false);
 var cursors;
 
 function preload() {
@@ -6,7 +6,11 @@ function preload() {
     game.load.image("floor", "images/background_new.png");
     //game.load.image("player", "images/player1.png");
     //*Loads the Spritesheet for the player sprite moving*//
+<<<<<<< HEAD
     game.load.spritesheet("player","images/playerMove.png", 19, 28, 5);
+=======
+    game.load.spritesheet("player", "images/playerMove.png", 19, 28, 3);
+>>>>>>> 480f90baaa96c20605ee2724b994b3dc00eccd76
     cursors = game.input.keyboard.createCursorKeys();
 }
 var player, floor;
@@ -22,20 +26,20 @@ function create() {
     floor = game.add.sprite(0, game.world.height - 134, "floor");
     game.physics.arcade.enable(floor);
     floor.body.immovable = true;
-    floor.body.setSize(1600,80,0,54);
+    floor.body.setSize(1600, 80, 0, 54);
 
     //add the player
-    player = game.add.sprite(0,0,"player");
+    player = game.add.sprite(0, 0, "player");
     //*creates the "Walk" animation*//
     player.animations.add('walk', [0, 2, 1]);
     //*creates the "Attack" animation*//
     player.animations.add('attack',[0, 3,4]);
 
     //scale the player
-    player.scale.setTo(7,7);
+    player.scale.setTo(7, 7);
 
     //set player pivot
-    player.anchor.set(.3,.5);
+    player.pivot.set(6, 14);
 
     //enable physics for player
     game.physics.arcade.enable(player);
@@ -49,53 +53,50 @@ function create() {
 function update() {
     playerCollisions();
     playerMovement();
-    
+
 }
 
 var playerTouchingGround;
-function playerCollisions(){
-    playerTouchingGround = game.physics.arcade.collide(player,floor);
-    
+function playerCollisions() {
+    playerTouchingGround = game.physics.arcade.collide(player, floor);
+
 }
 
-function addGravity(){
+function addGravity() {
     //player.body.gravity.y *= 1.3;
     //player.body.gravity.y += 1009;
     player.body.velocity.y += 25;
 }
 
-function playerMovement(){
+function playerMovement() {
     //check for l/r movement
-    if(cursors.left.isDown){
+    if (cursors.left.isDown) {
         player.body.velocity.x += -30;
         //*Plays the walk animation, at 8 frames a second*//
         player.animations.play('walk', 8, true);
         //play left animation
-        if(faceRight == true)
-        {
+        if (faceRight == true) {
             player.scale.x *= -1;
             faceRight = false;
         }
     }
-    else if(cursors.right.isDown){
+    else if (cursors.right.isDown) {
         player.body.velocity.x += 30;
         //*Plays the walk animation, at 8 frames a second*//
         player.animations.play('walk', 8, true);
         //play right animation
-        if(faceRight == false)
-        {
+        if (faceRight == false) {
             player.scale.x *= -1;
             faceRight = true;
         }
     }
-    else{
+    else {
         player.body.velocity.x *= .75;
     }
 
-    if(cursors.left.isUp == true && cursors.right.isUp == true)
-    {
+    if (cursors.left.isUp == true && cursors.right.isUp == true) {
         //*When the left cursor and the right cursor are up, stops the walk animation*//
-        player.animations.stop('walk',true);
+        player.animations.stop('walk', true);
     }
 
     //Handles the event where the player left clicks and the attack animation plays
@@ -109,11 +110,11 @@ function playerMovement(){
     }
 
 
-    if(player.body.velocity.x < -300){
+    if (player.body.velocity.x < -300) {
         player.body.velocity.x = -300;
     }
 
-    if(player.body.velocity.x > 300){
+    if (player.body.velocity.x > 300) {
         player.body.velocity.x = 300;
     }
 
@@ -121,19 +122,17 @@ function playerMovement(){
     //check for jumps
     if (cursors.up.isDown && player.body.touching.down && playerTouchingGround) {
         player.body.velocity.y = -650;
-        
+
     }
 
-    if(playerTouchingGround == true)
-    {
+    if (playerTouchingGround == true) {
         player.body.gravity.y = 1000;
-    //  this.game.time.events.stop();
+        //  this.game.time.events.stop();
     }
-    else
-    {
+    else {
         //player.body.gravity.y *= (this.game.time.elapsed / 20)
         this.game.time.events.repeat(Phaser.Timer.SECOND / 2, 1, this.addGravity, this);
-    //var jumpTimer = this.game.time.events.repeat(Phaser.Timer.SECOND / 2, 1, this.addGravity, this);
-    //jumpTimer.start(0);
+        //var jumpTimer = this.game.time.events.repeat(Phaser.Timer.SECOND / 2, 1, this.addGravity, this);
+        //jumpTimer.start(0);
     }
 }
