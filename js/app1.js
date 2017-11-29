@@ -8,6 +8,7 @@ function preload() {
     cursors = game.input.keyboard.createCursorKeys();
 }
 var player, floor;
+var faceRight = true;
 function create() {
     //initialize the physics system
     game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -48,22 +49,51 @@ function playerCollisions(){
     
 }
 
+function addGravity(){
+    //player.body.gravity.y *= 1.3;
+    //player.body.gravity.y += 1009;
+    player.body.velocity.y += 25;
+}
+
 function playerMovement(){
     //check for l/r movement
     if(cursors.left.isDown){
         player.body.velocity.x = -300;
         //play left animation
+        if(faceRight == true)
+        {
+        player.scale.x *= -1;
+        faceRight = false;
+
+        }
     }
     else if(cursors.right.isDown){
         player.body.velocity.x = 300;
         //play right animation
+        if(faceRight == false)
+        {
+        player.scale.x *= -1;
+        faceRight = true;
+        }
     }
     else{
         player.body.velocity.x = 0;
     }
-
     //check for jumps
-    if(cursors.up.isDown && player.body.touching.down && playerTouchingGround){
+    if (cursors.up.isDown && player.body.touching.down && playerTouchingGround) {
         player.body.velocity.y = -650;
+        
+    }
+    if(playerTouchingGround == true)
+    {
+        player.body.gravity.y = 1000;
+    // this.game.time.events.stop();
+    }
+    else
+    {
+        //player.body.gravity.y *= (this.game.time.elapsed / 20)
+        this.game.time.events.repeat(Phaser.Timer.SECOND / 2, 1, this.addGravity, this);
+    //var jumpTimer = this.game.time.events.repeat(Phaser.Timer.SECOND / 2, 1, this.addGravity, this);
+    //jumpTimer.start(0);
     }
 }
