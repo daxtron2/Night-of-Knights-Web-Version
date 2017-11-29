@@ -4,7 +4,8 @@ var cursors;
 function preload() {
     game.load.image("fog", "images/fog.png");
     game.load.image("floor", "images/background_new.png");
-    game.load.image("player", "images/player1.png");
+    //game.load.image("player", "images/player1.png");
+    game.load.spritesheet("player","images/playerMove.png", 19, 28, 3);
     cursors = game.input.keyboard.createCursorKeys();
 }
 var player, floor;
@@ -24,6 +25,8 @@ function create() {
 
     //add the player
     player = game.add.sprite(0,0,"player");
+
+    player.animations.add('walk');
 
     //scale the player
     player.scale.setTo(7,7);
@@ -62,6 +65,7 @@ function playerMovement(){
     //check for l/r movement
     if(cursors.left.isDown){
         player.body.velocity.x += -30;
+        player.animations.play('walk', 8, true);
         //play left animation
         if(faceRight == true)
         {
@@ -71,6 +75,7 @@ function playerMovement(){
     }
     else if(cursors.right.isDown){
         player.body.velocity.x += 30;
+        player.animations.play('walk', 8, true);
         //play right animation
         if(faceRight == false)
         {
@@ -81,6 +86,12 @@ function playerMovement(){
     else{
         player.body.velocity.x *= .75;
     }
+
+    if(cursors.left.isUp == true && cursors.right.isUp == true)
+    {
+        player.animations.stop('walk',true);
+    }
+
 
     if(player.body.velocity.x < -300){
         player.body.velocity.x = -300;
