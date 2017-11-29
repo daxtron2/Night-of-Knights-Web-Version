@@ -5,6 +5,7 @@ function preload() {
     game.load.image("fog", "images/fog.png");
     game.load.image("floor", "images/background_new.png");
     //game.load.image("player", "images/player1.png");
+    //*Loads the Spritesheet for the player sprite moving*//
     game.load.spritesheet("player","images/playerMove.png", 19, 28, 3);
     cursors = game.input.keyboard.createCursorKeys();
 }
@@ -25,7 +26,7 @@ function create() {
 
     //add the player
     player = game.add.sprite(0,0,"player");
-
+    //*creates the "Walk" animation*//
     player.animations.add('walk');
 
     //scale the player
@@ -65,6 +66,7 @@ function playerMovement(){
     //check for l/r movement
     if(cursors.left.isDown){
         player.body.velocity.x += -30;
+        //*Plays the walk animation, at 8 frames a second*//
         player.animations.play('walk', 8, true);
         //play left animation
         if(faceRight == true)
@@ -75,6 +77,7 @@ function playerMovement(){
     }
     else if(cursors.right.isDown){
         player.body.velocity.x += 30;
+        //*Plays the walk animation, at 8 frames a second*//
         player.animations.play('walk', 8, true);
         //play right animation
         if(faceRight == false)
@@ -89,6 +92,7 @@ function playerMovement(){
 
     if(cursors.left.isUp == true && cursors.right.isUp == true)
     {
+        //*When the left cursor and the right cursor are up, stops the walk animation*//
         player.animations.stop('walk',true);
     }
 
