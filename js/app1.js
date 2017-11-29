@@ -28,6 +28,9 @@ function create() {
     //scale the player
     player.scale.setTo(7,7);
 
+    //set player pivot
+    player.anchor.set(.3,.5);
+
     //enable physics for player
     game.physics.arcade.enable(player);
 
