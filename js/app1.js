@@ -27,7 +27,7 @@ function create() {
     //add the player
     player = game.add.sprite(0,0,"player");
     //*creates the "Walk" animation*//
-    player.animations.add('walk');
+    player.animations.add('walk', [0, 1, 2]);
 
     //scale the player
     player.scale.setTo(7,7);
