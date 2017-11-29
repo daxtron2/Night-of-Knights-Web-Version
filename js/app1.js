@@ -6,11 +6,7 @@ function preload() {
     game.load.image("floor", "images/background_new.png");
     //game.load.image("player", "images/player1.png");
     //*Loads the Spritesheet for the player sprite moving*//
-<<<<<<< HEAD
     game.load.spritesheet("player","images/playerMove.png", 19, 28, 5);
-=======
-    game.load.spritesheet("player", "images/playerMove.png", 19, 28, 3);
->>>>>>> 480f90baaa96c20605ee2724b994b3dc00eccd76
     cursors = game.input.keyboard.createCursorKeys();
 }
 var player, floor;
