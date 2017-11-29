@@ -58,36 +58,46 @@ function addGravity(){
 function playerMovement(){
     //check for l/r movement
     if(cursors.left.isDown){
-        player.body.velocity.x = -300;
+        player.body.velocity.x += -30;
         //play left animation
         if(faceRight == true)
         {
-        player.scale.x *= -1;
-        faceRight = false;
-
+            player.scale.x *= -1;
+            faceRight = false;
         }
     }
     else if(cursors.right.isDown){
-        player.body.velocity.x = 300;
+        player.body.velocity.x += 30;
         //play right animation
         if(faceRight == false)
         {
-        player.scale.x *= -1;
-        faceRight = true;
+            player.scale.x *= -1;
+            faceRight = true;
         }
     }
     else{
-        player.body.velocity.x = 0;
+        player.body.velocity.x *= .75;
     }
+
+    if(player.body.velocity.x < -300){
+        player.body.velocity.x = -300;
+    }
+
+    if(player.body.velocity.x > 300){
+        player.body.velocity.x = 300;
+    }
+
+
     //check for jumps
     if (cursors.up.isDown && player.body.touching.down && playerTouchingGround) {
         player.body.velocity.y = -650;
         
     }
+
     if(playerTouchingGround == true)
     {
         player.body.gravity.y = 1000;
-    // this.game.time.events.stop();
+    //  this.game.time.events.stop();
     }
     else
     {
