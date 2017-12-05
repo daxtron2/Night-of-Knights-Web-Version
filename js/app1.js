@@ -4,12 +4,13 @@ var cursors;
 function preload() {
     game.load.image("fog", "images/fog.png");
     game.load.image("floor", "images/background_new.png");
-    //game.load.image("player", "images/player1.png");
+    game.load.image("melee", "images/meleeEnemy.png")
+
     //*Loads the Spritesheet for the player sprite moving*//
-    game.load.spritesheet("player","images/playerMove.png", 19, 28, 5);
+    game.load.spritesheet("player", "images/playerMove.png", 19, 28, 5);
     cursors = game.input.keyboard.createCursorKeys();
 }
-var player, floor;
+var player, floor, enemy, attack;
 var faceRight = true;
 function create() {
     //initialize the physics system
@@ -29,7 +30,9 @@ function create() {
     //*creates the "Walk" animation*//
     player.animations.add('walk', [0, 2, 1]);
     //*creates the "Attack" animation*//
-    player.animations.add('attack',[0, 3,4]);
+    player.animations.add('attack', [0, 3, 4]);
+    //create idle anim
+    player.animations.add('idle', [0]);
 
     //scale the player
     player.scale.setTo(7, 7);
@@ -43,6 +46,12 @@ function create() {
     //change player's physics settings
     player.body.gravity.y = 1000;
     player.body.collideWorldBounds = true;
+
+    //add in a melee enemy
+    enemy = game.add.sprite(100, 100, "melee");
+
+    //scale the enemy up
+    enemy.scale.setTo(7, 7);
 
 }
 
@@ -96,14 +105,18 @@ function playerMovement() {
     }
 
     //Handles the event where the player left clicks and the attack animation plays
-    if(game.input.activePointer.isDown == true)
-    {
+    if (game.input.activePointer.isDown == true) {
         player.animations.play('attack', 10, false);
+        console.log(player.animations);
     }
-    else
-    {
-        player.animations.stop('attack', true);
+
+    if(player.animations._anims.attack.isPlaying == false && player.animations._anims.walk.isPlaying == false){
+        player.animations.play('idle', 0, false);
     }
+
+
+
+
 
 
     if (player.body.velocity.x < -300) {
