@@ -87,11 +87,14 @@ function addGravity() {
     player.body.velocity.y += 25;
 }
 
+var playerHealth;
+var style;
+var healthText;
 function displayHealth()
 {
-    var playerHealth = player.health;
-    var style = { font: "32px Times", fill: "#000000", align: "left"};
-    var healthText = game.add.text(10, 0, "Player Health: " + playerHealth, style);
+     playerHealth = player.health;
+     style = { font: "32px Times", fill: "#000000", align: "left"};
+     healthText = game.add.text(10, 0, "Player Health: " + playerHealth, style);
 }
 
 function playerMovement() {
