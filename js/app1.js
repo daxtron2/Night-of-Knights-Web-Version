@@ -37,6 +37,9 @@ function create() {
     //scale the player
     player.scale.setTo(7, 7);
 
+    //Add health to the player.
+    player.health = 50;
+
     //set player pivot
     player.pivot.set(6, 14);
 
@@ -48,29 +51,47 @@ function create() {
     player.body.collideWorldBounds = true;
 
     //add in a melee enemy
-    enemy = game.add.sprite(100, 100, "melee");
+    enemy = game.add.sprite(700, 500, "melee");
 
     //scale the enemy up
     enemy.scale.setTo(7, 7);
+
+    //Add physics to the base enemy
+    game.physics.arcade.enable(enemy);
+    enemy.body.gravity.y = 1000;
+    enemy.body.collideWorldBounds = true;
 
 }
 
 function update() {
     playerCollisions();
     playerMovement();
-
+    enemyCollisions();
+    displayHealth();
 }
 
 var playerTouchingGround;
 function playerCollisions() {
-    playerTouchingGround = game.physics.arcade.collide(player, floor);
+    playerTouchingGround = game.physics.arcade.collide(player, floor);  
+}
 
+var enemyTouchingGround;
+function enemyCollisions()
+{
+    enemyTouchingGround = game.physics.arcade.collide(enemy, floor);
 }
 
 function addGravity() {
     //player.body.gravity.y *= 1.3;
     //player.body.gravity.y += 1009;
     player.body.velocity.y += 25;
+}
+
+function displayHealth()
+{
+    var playerHealth = player.health;
+    var style = { font: "32px Times", fill: "#000000", align: "left"};
+    var healthText = game.add.text(10, 0, "Player Health: " + playerHealth, style);
 }
 
 function playerMovement() {
@@ -113,11 +134,6 @@ function playerMovement() {
     if(player.animations._anims.attack.isPlaying == false && player.animations._anims.walk.isPlaying == false){
         player.animations.play('idle', 0, false);
     }
-
-
-
-
-
 
     if (player.body.velocity.x < -300) {
         player.body.velocity.x = -300;
