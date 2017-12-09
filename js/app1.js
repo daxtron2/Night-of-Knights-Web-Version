@@ -10,12 +10,11 @@ function preload() {
     game.load.spritesheet("player", "images/playerMove.png", 19, 28, 5);
     cursors = game.input.keyboard.createCursorKeys();
 }
-var player, floor, enemy, attack;
+var player, floor, enemy, attack, weapon, hitboxes, healthText;
 var faceRight = true;
 function create() {
     //initialize the physics system
     game.physics.startSystem(Phaser.Physics.ARCADE);
-
     //add the background
     game.add.sprite(0, 0, "fog");
 
@@ -49,6 +48,16 @@ function create() {
     //change player's physics settings
     player.body.gravity.y = 1000;
     player.body.collideWorldBounds = true;
+
+    //change player's hitbox size
+    player.body.setSize(11, 27, 1, 1);
+
+    //create a hitbox for the player's weapon
+    hitboxes = game.add.group();
+    hitboxes.enableBody = true;
+    player.addChild(hitboxes);
+    weapon = hitboxes.create(0, 0, null);
+    weapon.body.setSize(50, 100, 84, player.height / 2 - 10);
 
     //add in a melee enemy
     enemy = game.add.sprite(700, 500, "melee");
