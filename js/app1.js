@@ -116,6 +116,7 @@ function playerMovement() {
         player.body.velocity.x += -30;
         //*Plays the walk animation, at 8 frames a second*//
         player.animations.play('walk', 8, true);
+
         //play left animation
         if (faceRight == true) {
             player.scale.x *= -1;
@@ -132,23 +133,13 @@ function playerMovement() {
             faceRight = true;
         }
     }
-    else {
-        player.body.velocity.x *= .75;
+    else if (playerTouchingGround) {
+        player.body.velocity.x *= .8;
     }
 
     if (cursors.left.isUp == true && cursors.right.isUp == true) {
         //*When the left cursor and the right cursor are up, stops the walk animation*//
         player.animations.stop('walk', true);
-    }
-
-    //Handles the event where the player left clicks and the attack animation plays
-    if (game.input.activePointer.isDown == true) {
-        player.animations.play('attack', 10, false);
-        console.log(player.animations);
-    }
-
-    if(player.animations._anims.attack.isPlaying == false && player.animations._anims.walk.isPlaying == false){
-        player.animations.play('idle', 0, false);
     }
 
     if (player.body.velocity.x < -300) {
@@ -168,7 +159,7 @@ function playerMovement() {
 
     if (playerTouchingGround == true) {
         player.body.gravity.y = 1000;
-        //  this.game.time.events.stop();
+
     }
     else {
         //player.body.gravity.y *= (this.game.time.elapsed / 20)
