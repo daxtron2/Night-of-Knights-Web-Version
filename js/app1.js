@@ -79,19 +79,29 @@ function create() {
 }
 
 function update() {
+    floorCollisions();//collide our player and enemy with floor so they dont fall
+    playerMovement();//handle player input for movement
+    updateHitboxes();//move the hitboxes with the player
+    playerAttack();//handle player input for attacking, handle collision between enemy and sword
+
     //update the text with new values
     healthText.setText("Player Health: " + player.health + "\nEnemy Health: " + enemy.health);
 
+    //debug lines
+    game.debug.body(player);
+    game.debug.body(weapon);
+    game.debug.body(enemy);
+    //console.log(weapon.body.position);
 }
 
 var playerTouchingGround, enemyTouchingGround;
 function floorCollisions() {
-    playerTouchingGround = game.physics.arcade.collide(player, floor);  
+    playerTouchingGround = game.physics.arcade.collide(player, floor);
     enemyTouchingGround = game.physics.arcade.collide(enemy, floor);
 
     if(!playerTouchingGround){
         player.animations.stop('walk');
-}
+    }
 }
 
 function updateHitboxes() {
