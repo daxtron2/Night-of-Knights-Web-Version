@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css?family=Lato');
+body{
+    font-family: 'Lato', sans-serif;
+    padding: 10vw;
+    padding-top: 0;
+    padding-bottom: 0;
+    background-color: lightgoldenrodyellow
+}
+
+header{
+    text-align: center;
+    font-size: 35pt;
+}
+
+main{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.gameImg{
+    /* Should fix scaling of pixel art on all browsers */
+    image-rendering: optimizeSpeed;       
+    image-rendering: pixelated;                 
+    image-rendering: -moz-crisp-edges;   
+    image-rendering: optimize-contrast;     
+    image-rendering: -o-crisp-edges;            
+    -ms-interpolation-mode: nearest-neighbor;
+
+    width: 100%;
+}
+
+figure{
+    margin: 1vw;
+    width: 15vw;
+    text-align: justify;
+    text-align-last: center;
+}
+
+#landingText{
+    max-width: 70vw;
+    margin: auto;
+    font-size: 15pt;
+    text-align: justify;
+    text-align-last: center;
+}
+
+@media only screen and (max-width: 600px){
+    body{
+        padding: 0;
+    }
+    #landingText{
+        margin: 0;
+        max-width: 100vw;
+    }
+    figure{
+        min-width: 90vw;
+    }
+    main{
+        margin-top: 1vh;
+    }
+}
