@@ -65,18 +65,23 @@ function create() {
     //scale the enemy up
     enemy.scale.setTo(7, 7);
 
+    //add health to enemy
+    enemy.health = 10;
+
     //Add physics to the base enemy
     game.physics.arcade.enable(enemy);
     enemy.body.gravity.y = 1000;
     enemy.body.collideWorldBounds = true;
 
+    //create the text in top left
+    healthText = game.add.text(10, 0, "Player Health: " + player.health + "\nEnemy Health: " + enemy.health);
+
 }
 
 function update() {
-    playerCollisions();
-    playerMovement();
-    enemyCollisions();
-    displayHealth();
+    //update the text with new values
+    healthText.setText("Player Health: " + player.health + "\nEnemy Health: " + enemy.health);
+
 }
 
 var playerTouchingGround;
