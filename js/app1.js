@@ -110,16 +110,6 @@ function addGravity() {
     player.body.velocity.y += 25;
 }
 
-var playerHealth;
-var style;
-var healthText;
-function displayHealth()
-{
-     playerHealth = player.health;
-     style = { font: "32px Times", fill: "#000000", align: "left"};
-     healthText = game.add.text(10, 0, "Player Health: " + playerHealth, style);
-}
-
 function playerMovement() {
     //check for l/r movement
     if (cursors.left.isDown) {
