@@ -168,3 +168,39 @@ function playerMovement() {
         //jumpTimer.start(0);
     }
 }
+
+var attackThisFrame = false;
+function playerAttack() {
+    if (player.animations._anims.attack.isPlaying
+        ||
+        player.animations._anims.walk.isPlaying) {
+        return;
+    }
+
+    //Handles the event where the player left clicks and the attack animation plays
+    if (game.input.activePointer.isDown == true) {
+        player.animations.play('attack', 10, false);
+        attackThisFrame = true;
+    }
+    else {
+        attackThisFrame = false;
+    }
+
+    if (player.animations._anims.attack.isPlaying == false && player.animations._anims.walk.isPlaying == false) {
+        player.animations.play('idle', 0, false);
+    }
+
+    if (attackThisFrame) {
+        var didDamage = game.physics.arcade.overlap(weapon, enemy);
+        if (didDamage) {
+            enemy.health -= 5;
+
+            if (enemy.health <= 0) {
+                enemy.tint = 0xFF0000;
+                enemy.position.x = Math.random() * game.width;
+            }
+        }
+
+
+    }
+}
