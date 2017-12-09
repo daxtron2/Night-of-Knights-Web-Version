@@ -84,9 +84,14 @@ function update() {
 
 }
 
-var playerTouchingGround;
-function playerCollisions() {
+var playerTouchingGround, enemyTouchingGround;
+function floorCollisions() {
     playerTouchingGround = game.physics.arcade.collide(player, floor);  
+    enemyTouchingGround = game.physics.arcade.collide(enemy, floor);
+
+    if(!playerTouchingGround){
+        player.animations.stop('walk');
+}
 }
 
 var enemyTouchingGround;
