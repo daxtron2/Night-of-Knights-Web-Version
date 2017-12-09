@@ -94,10 +94,14 @@ function floorCollisions() {
 }
 }
 
-var enemyTouchingGround;
-function enemyCollisions()
-{
-    enemyTouchingGround = game.physics.arcade.collide(enemy, floor);
+function updateHitboxes() {
+    if (faceRight) {
+        weapon.body.x = player.body.x + player.body.width;
+    }
+    else {
+        weapon.body.x = player.body.x - 50;
+    }
+    weapon.body.y = player.body.y + player.height / 2 - 20;
 }
 
 function addGravity() {
