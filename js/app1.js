@@ -83,15 +83,31 @@ function update() {
     playerMovement();//handle player input for movement
     updateHitboxes();//move the hitboxes with the player
     playerAttack();//handle player input for attacking, handle collision between enemy and sword
-
+    drawDebug();
     //update the text with new values
     healthText.setText("Player Health: " + player.health + "\nEnemy Health: " + enemy.health);
 
-    //debug lines
-    game.debug.body(player);
-    game.debug.body(weapon);
-    game.debug.body(enemy);
-    //console.log(weapon.body.position);
+
+}
+var dPressed = false, drawNow;
+function drawDebug(){
+    if(game.input.keyboard.isDown(Phaser.Keyboard.D) && dPressed == false){
+        dPressed = true;
+        drawNow = !drawNow;
+    }
+    if(game.input.keyboard.isDown(Phaser.Keyboard.D) == false){
+        dPressed = false;
+    }
+
+    if(drawNow){
+        game.debug.body(player);
+        game.debug.body(weapon);
+        game.debug.body(enemy);
+    }
+    else{
+        game.debug.reset();
+    }
+    //console.log(drawNow);
 }
 
 var playerTouchingGround, enemyTouchingGround;
