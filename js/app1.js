@@ -10,7 +10,7 @@ function preload() {
     game.load.spritesheet("player", "images/playerMove.png", 19, 28, 5);
     cursors = game.input.keyboard.createCursorKeys();
 }
-var player, floor, enemy, attack, weapon, hitboxes, healthText;
+var player, floor, enemy, attack, weapon, hitboxes, healthText, enemyWeapon;
 var faceRight = true;
 function create() {
     //initialize the physics system
@@ -64,6 +64,7 @@ function create() {
 
     //scale the enemy up
     enemy.scale.setTo(7, 7);
+    enemy.pivot.set(8,9);
 
     //add health to enemy
     enemy.health = 10;
@@ -73,14 +74,18 @@ function create() {
     enemy.body.gravity.y = 1000;
     enemy.body.collideWorldBounds = true;
 
+
+
     //create the text in top left
     healthText = game.add.text(10, 0, "Player Health: " + player.health + "\nEnemy Health: " + enemy.health);
 
 }
 
 function update() {
+    enemy.tint = 0xffffff;
     floorCollisions();//collide our player and enemy with floor so they dont fall
     playerMovement();//handle player input for movement
+    enemyMovement();
     updateHitboxes();//move the hitboxes with the player
     playerAttack();//handle player input for attacking, handle collision between enemy and sword
     drawDebug();
@@ -90,21 +95,22 @@ function update() {
 
 }
 var dPressed = false, drawNow;
-function drawDebug(){
-    if(game.input.keyboard.isDown(Phaser.Keyboard.D) && dPressed == false){
+function drawDebug() {
+    if (game.input.keyboard.isDown(Phaser.Keyboard.D) && dPressed == false) {
         dPressed = true;
         drawNow = !drawNow;
     }
-    if(game.input.keyboard.isDown(Phaser.Keyboard.D) == false){
+    if (game.input.keyboard.isDown(Phaser.Keyboard.D) == false) {
         dPressed = false;
     }
 
-    if(drawNow){
+    if (drawNow) {
         game.debug.body(player);
         game.debug.body(weapon);
         game.debug.body(enemy);
+        //game.debug.body(enemyWeapon);
     }
-    else{
+    else {
         game.debug.reset();
     }
     //console.log(drawNow);
@@ -115,7 +121,7 @@ function floorCollisions() {
     playerTouchingGround = game.physics.arcade.collide(player, floor);
     enemyTouchingGround = game.physics.arcade.collide(enemy, floor);
 
-    if(!playerTouchingGround){
+    if (!playerTouchingGround) {
         player.animations.stop('walk');
     }
 }
@@ -220,13 +226,23 @@ function playerAttack() {
         var didDamage = game.physics.arcade.overlap(weapon, enemy);
         if (didDamage) {
             enemy.health -= 5;
+            enemy.tint=0xff0000;
 
             if (enemy.health <= 0) {
-                enemy.tint = 0xFF0000;
+                //enemy.tint = 0x000000;
                 enemy.position.x = Math.random() * game.width;
             }
         }
 
 
+    }
+}
+
+function enemyMovement(){
+    if(player.position.x > enemy.position.x){
+        enemy.scale.x = -7;
+    }
+    else{
+        enemy.scale.x = 7;
     }
 }
