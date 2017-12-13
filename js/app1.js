@@ -5,6 +5,10 @@ function preload() {
     game.load.image("fog", "images/fog.png");
     game.load.image("floor", "images/background_new.png");
     game.load.image("melee", "images/meleeEnemy.png")
+    game.load.audio("playerHurt", "audio/playerHurt.wav");
+    game.load.audio("enemyHurt", "audio/enemyHurt.wav");
+    game.load.audio("whiff", "audio/whiff.wav");
+    game.load.audio("jump", "audio/jump.wav");
 
     //*Loads the Spritesheet for the player sprite moving*//
     game.load.spritesheet("player", "images/playerMove.png", 19, 28, 5);
@@ -32,6 +36,18 @@ function create() {
     player.animations.add('attack', [0, 3, 4]);
     //create idle anim
     player.animations.add('idle', [0]);
+
+    //add the player hurt audio
+    playerHurt = game.add.audio("playerHurt");
+
+    //add the enemy hurt audio
+    enemyHurt = game.add.audio("enemyHurt");
+
+    //add the player attack, no hit sound
+    whiff = game.add.audio("whiff");
+
+    //add the player jump sound
+    jump = game.add.audio("jump");
 
     //scale the player
     player.scale.setTo(7, 7);
@@ -195,6 +211,7 @@ function playerMovement() {
     //check for jumps
     if (cursors.up.isDown && player.body.touching.down && playerTouchingGround) {
         player.body.velocity.y = -650;
+        jump.play();
 
     }
 
@@ -236,6 +253,7 @@ function playerAttack() {
         if (didDamage) {
             enemy.health -= 5;
             enemy.tint = 0xff0000;
+            enemyHurt.play();
 
             if (enemy.health <= 0) {
                 //enemy.tint = 0x000000;
@@ -243,6 +261,7 @@ function playerAttack() {
                 enemy.health = 10;
                 player.health += 2;
             }
+            whiff.play();
         }
     }
 }
@@ -260,8 +279,8 @@ function enemyMovement() {
 
 function enemyAttack() {
     if (game.physics.arcade.overlap(enemy, player)) {
-        console.log("HIT");
-        player.health -= 10;
+        playerHurt.play();
+    }
     }
     else {
         console.log("MISS");
