@@ -97,23 +97,44 @@ function create() {
 
 
     //create the text in top left
-    healthText = game.add.text(10, 0, "Player Health: " + player.health + "\nEnemy Health: " + enemy.health);
+    healthText = game.add.text(10, 0, "Player Health: " + player.health + "\nEnemy Health: " + enemy.health + "\nKills: 0");
+    healthText.addColor("#ffffff", 0);
 
-    timer = game.time.create(false);
+    //create more text for controls
+    var instruct = game.add.text(game.width - 400, 0, "Arrow Keys to move\nLeft click to attack\nD to draw hitboxes\nGain some health every 5 kills\nPress G to enable God mode");
+    instruct.addColor("#ffffff", 0);
 
-    timer.loop(1000, enemyAttack, this);
-    timer.start();
+
+
+
+    enemyAttackTimer = game.time.create(false);
+
+    enemyAttackTimer.loop(1000, enemyAttack, this);
+    enemyAttackTimer.start();
+
+    var tintTimer = game.time.create(false);
+    tintTimer.loop(700, resetTint, this);
+    tintTimer.start();
 
 }
-
+var killsDisplay = 0;
 function update() {
-    enemy.tint = 0xffffff;
+
     floorCollisions();//collide our player and enemy with floor so they dont fall
     playerMovement();//handle player input for movement
     enemyMovement();
     updateHitboxes();//move the hitboxes with the player
     playerAttack();//handle player input for attacking, handle collision between enemy and sword
     drawDebug();
+    enableGod();
+
+    if (godEnabled) {
+        player.health = 50;
+        player.tint = 0xff00ff;
+    }
+    else {
+        player.tint = 0xffffff;
+    }
 
     if (player.health <= 0) {
         playerDeath();
@@ -121,7 +142,7 @@ function update() {
 
 
     //update the text with new values
-    healthText.setText("Player Health: " + player.health + "\nEnemy Health: " + enemy.health);
+    healthText.setText("Player Health: " + player.health + "\nEnemy Health: " + enemy.health + "\nKills: " + killsDisplay + "\nEnemy Level: " + (Math.round(enemyMoveWeight * 10) / 10));
 
 
 }
@@ -233,7 +254,7 @@ function playerMovement() {
     }
 }
 
-var attackThisFrame = false;
+var attackThisFrame = false, kills = 0;
 function playerAttack() {
     if (player.animations._anims.attack.isPlaying
         ||
@@ -265,8 +286,11 @@ function playerAttack() {
                 //enemy.tint = 0x000000;
                 enemy.position.x = Math.random() * game.width;
                 enemy.health = 10;
-                player.health += 2;
+                kills++;
+                killsDisplay++;
             }
+        }
+        else{
             whiff.play();
         }
     }
@@ -288,14 +312,29 @@ function enemyMovement() {
 }
 
 function enemyAttack() {
+    enemy.tint = 0x00ff00;
     if (game.physics.arcade.overlap(enemy, player)) {
         player.health -= 5;
         player.tint = 0xff0000;
         playerHurt.play();
     }
+
+}
+
+function resetTint() {
+    player.tint = 0xffffff;
+    enemy.tint = 0xffffff;
+}
+
+var gPressed = false, godEnabled = false;
+function enableGod() {
+    if (game.input.keyboard.isDown(Phaser.Keyboard.G) && gPressed == false) {
+        gPressed = true;
+        godEnabled = !godEnabled
     }
-    else {
-        console.log("MISS");
+    if (game.input.keyboard.isDown(Phaser.Keyboard.G) == false) {
+        gPressed = false;
+    }
     }
 
 function playerDeath() {
