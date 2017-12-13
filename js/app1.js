@@ -270,10 +270,9 @@ function playerMovement() {
 
 var attackThisFrame = false, kills = 0;
 function playerAttack() {
-    if (player.animations._anims.attack.isPlaying
-        ||
-        player.animations._anims.walk.isPlaying) {
-        return;
+    //if we're already attacking or walking
+    if (player.animations._anims.attack.isPlaying || player.animations._anims.walk.isPlaying) {
+        return;//leave the method
     }
 
     //Handles the event where the player left clicks and the attack animation plays
@@ -285,38 +284,43 @@ function playerAttack() {
         attackThisFrame = false;
     }
 
+    //if attack is not playing and walk is not playing, do idle "animation" which is just a single frame
     if (player.animations._anims.attack.isPlaying == false && player.animations._anims.walk.isPlaying == false) {
         player.animations.play('idle', 0, false);
     }
 
+    //if we want to try to attack this frame
     if (attackThisFrame) {
+        //check for collision between weapon and enemy
         var didDamage = game.physics.arcade.overlap(weapon, enemy);
+        //if we hit the enemy
         if (didDamage) {
-            enemy.health -= 5;
-            enemy.tint = 0xff0000;
-            enemyHurt.play();
+            enemy.health -= 5;//remove some health
+            enemy.tint = 0xff0000;//make it red for a little bit
+            enemyHurt.play();//play his hurt noise
 
+            //if the enemy is dead
             if (enemy.health <= 0) {
-                //enemy.tint = 0x000000;
+                //50/50 shot of where the "new" one spawns, left or right side
                 if (Math.random() > .5) {
                     enemy.position.x = -50;
                 }
                 else {
                     enemy.position.x = game.width + 50;
                 }
-                enemy.health = 10;
-                enemyMoveWeight += .1;
-                kills++;
+                enemy.health = 10;//reset its health
+                enemyMoveWeight += .1;//increase its move speed 
+                kills++;//increment kill counters
                 killsDisplay++;
             }
         }
-        else {
-            whiff.play();
+        else {//if we missed the enemy
+            whiff.play();//play the whiff sound
         }
     }
-    if (kills % 5 == 0 && kills != 0) {
-        player.health += 5;
-        kills = 0;
+    if (kills % 5 == 0 && kills != 0) {//if kills is a factor of 5 and not 0
+        player.health += 5;//add some health to the player
+        kills = 0;//reset the interal counter, not the display
     }
 
 }
@@ -339,22 +343,25 @@ function enemyMovement() {
 }
 
 function enemyAttack() {
-    enemy.tint = 0x00ff00;
-    if (game.physics.arcade.overlap(enemy, player)) {
-        player.health -= 5;
-        player.tint = 0xff0000;
-        playerHurt.play();
+    enemy.tint = 0x00ff00;//every time enemy tries to attack show a visual change, could be anim in this case it's a tint change
+    if (game.physics.arcade.overlap(enemy, player)) {//if enemy hits player
+        player.health -= 5;//player loses some health
+        player.tint = 0xff0000;//player sprite indicates a hit
+        playerHurt.play();//player hurt sound plays
     }
 
 }
 
+//runs every so often to reset the sprite tints to normal
 function resetTint() {
     player.tint = 0xffffff;
     enemy.tint = 0xffffff;
 }
 
+
 var gPressed = false, godEnabled = false;
 function enableGod() {
+    //a flip flop method to enable disable god mode
     if (game.input.keyboard.isDown(Phaser.Keyboard.G) && gPressed == false) {
         gPressed = true;
         godEnabled = !godEnabled
