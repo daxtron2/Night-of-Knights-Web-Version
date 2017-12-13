@@ -284,8 +284,14 @@ function playerAttack() {
 
             if (enemy.health <= 0) {
                 //enemy.tint = 0x000000;
-                enemy.position.x = Math.random() * game.width;
+                if (Math.random() > .5) {
+                    enemy.position.x = -50;
+                }
+                else {
+                    enemy.position.x = game.width + 50;
+                }
                 enemy.health = 10;
+                enemyMoveWeight += .1;
                 kills++;
                 killsDisplay++;
             }
@@ -294,16 +300,22 @@ function playerAttack() {
             whiff.play();
         }
     }
-}
+    if (kills % 5 == 0 && kills != 0) {
+        player.health += 5;
+        kills = 0;
+    }
 
+}
+var enemyMoveWeight = 1.0;
 function enemyMovement() {
     if (player.visible) {
-    if (player.position.x > enemy.position.x) {
-        enemy.scale.x = -7;
-        enemy.body.velocity.x = 150;
-    }
-    else {
-        enemy.scale.x = 7;
+        if (player.position.x > enemy.position.x) {
+            enemy.scale.x = -7;
+            enemy.body.velocity.x = 150 * enemyMoveWeight;
+        }
+        else {
+            enemy.scale.x = 7;
+            enemy.body.velocity.x = -150 * enemyMoveWeight;
         }
     }
     else{
@@ -335,7 +347,7 @@ function enableGod() {
     if (game.input.keyboard.isDown(Phaser.Keyboard.G) == false) {
         gPressed = false;
     }
-    }
+}
 
 function playerDeath() {
     game.add.text(game.width / 2, game.height / 2, "GAME OVER");
