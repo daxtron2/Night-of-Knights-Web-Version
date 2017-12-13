@@ -371,6 +371,8 @@ function playerDeath() {
     healthText.visible = false;
     instruct.visible = false;
     drawNow = false;
+    game.debug.reset();//remove hitboxes
+    
 
     //mute all sounds
     game.sound.mute = true;
