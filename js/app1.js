@@ -14,7 +14,7 @@ function preload() {
     game.load.spritesheet("player", "images/playerMove.png", 19, 28, 5);
     cursors = game.input.keyboard.createCursorKeys();
 }
-var player, floor, enemy, attack, timer, weapon, hitboxes, healthText, enemyWeapon;
+var player, floor, enemy, attack, enemyAttackTimer, weapon, hitboxes, healthText, enemyWeapon, playerHurt, enemyHurt, whiff, jump;
 var faceRight = true;
 function create() {
     //initialize the physics system
@@ -114,6 +114,12 @@ function update() {
     updateHitboxes();//move the hitboxes with the player
     playerAttack();//handle player input for attacking, handle collision between enemy and sword
     drawDebug();
+
+    if (player.health <= 0) {
+        playerDeath();
+    }
+
+
     //update the text with new values
     healthText.setText("Player Health: " + player.health + "\nEnemy Health: " + enemy.health);
 
@@ -267,22 +273,33 @@ function playerAttack() {
 }
 
 function enemyMovement() {
+    if (player.visible) {
     if (player.position.x > enemy.position.x) {
         enemy.scale.x = -7;
         enemy.body.velocity.x = 150;
     }
     else {
         enemy.scale.x = 7;
-        enemy.body.velocity.x = -150;
+        }
+    }
+    else{
+        enemy.body.velocity.x = 0;
     }
 }
 
 function enemyAttack() {
     if (game.physics.arcade.overlap(enemy, player)) {
+        player.health -= 5;
+        player.tint = 0xff0000;
         playerHurt.play();
     }
     }
     else {
         console.log("MISS");
     }
+
+function playerDeath() {
+    game.add.text(game.width / 2, game.height / 2, "GAME OVER");
+    player.visible = false;
+    enemyAttackTimer.stop();
 }
