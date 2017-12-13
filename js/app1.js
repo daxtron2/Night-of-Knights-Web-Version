@@ -10,7 +10,7 @@ function preload() {
     game.load.spritesheet("player", "images/playerMove.png", 19, 28, 5);
     cursors = game.input.keyboard.createCursorKeys();
 }
-var player, floor, enemy, attack, weapon, hitboxes, healthText, enemyWeapon;
+var player, floor, enemy, attack, timer, weapon, hitboxes, healthText, enemyWeapon;
 var faceRight = true;
 function create() {
     //initialize the physics system
@@ -57,14 +57,16 @@ function create() {
     hitboxes.enableBody = true;
     player.addChild(hitboxes);
     weapon = hitboxes.create(0, 0, null);
-    weapon.body.setSize(50, 100, 84, player.height / 2 - 10);
+    weapon.body.setSize(50, 100, 0, player.height / 2 - 10);
 
     //add in a melee enemy
     enemy = game.add.sprite(700, 500, "melee");
 
     //scale the enemy up
     enemy.scale.setTo(7, 7);
-    enemy.pivot.set(8,9);
+    enemy.pivot.set(8, 9);
+
+
 
     //add health to enemy
     enemy.health = 10;
@@ -74,10 +76,17 @@ function create() {
     enemy.body.gravity.y = 1000;
     enemy.body.collideWorldBounds = true;
 
+    //change enemy's hitbox
+    enemy.body.setSize(7, 10, 3, 11);
 
 
     //create the text in top left
     healthText = game.add.text(10, 0, "Player Health: " + player.health + "\nEnemy Health: " + enemy.health);
+
+    timer = game.time.create(false);
+
+    timer.loop(1000, enemyAttack, this);
+    timer.start();
 
 }
 
@@ -226,23 +235,35 @@ function playerAttack() {
         var didDamage = game.physics.arcade.overlap(weapon, enemy);
         if (didDamage) {
             enemy.health -= 5;
-            enemy.tint=0xff0000;
+            enemy.tint = 0xff0000;
 
             if (enemy.health <= 0) {
                 //enemy.tint = 0x000000;
                 enemy.position.x = Math.random() * game.width;
+                enemy.health = 10;
+                player.health += 2;
             }
         }
-
-
     }
 }
 
-function enemyMovement(){
-    if(player.position.x > enemy.position.x){
+function enemyMovement() {
+    if (player.position.x > enemy.position.x) {
         enemy.scale.x = -7;
+        enemy.body.velocity.x = 150;
     }
-    else{
+    else {
         enemy.scale.x = 7;
+        enemy.body.velocity.x = -150;
+    }
+}
+
+function enemyAttack() {
+    if (game.physics.arcade.overlap(enemy, player)) {
+        console.log("HIT");
+        player.health -= 10;
+    }
+    else {
+        console.log("MISS");
     }
 }
