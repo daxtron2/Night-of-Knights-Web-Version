@@ -2,6 +2,7 @@ var game = new Phaser.Game(1600, 900, Phaser.AUTO, '', { preload: preload, creat
 var cursors;
 
 function preload() {
+    //load all the things
     game.load.image("fog", "images/fog.png");
     game.load.image("floor", "images/background_new.png");
     game.load.image("melee", "images/meleeEnemy.png")
@@ -108,12 +109,13 @@ function create() {
 
 
 
-
+    //start a timer to make enemy attack every second
     enemyAttackTimer = game.time.create(false);
 
     enemyAttackTimer.loop(1000, enemyAttack, this);
     enemyAttackTimer.start();
 
+    //reset character tints every 700ms
     var tintTimer = game.time.create(false);
     tintTimer.loop(700, resetTint, this);
     tintTimer.start();
@@ -132,16 +134,16 @@ function update() {
         drawDebug();
         enableGod();
 
-        if (godEnabled) {
-            player.health = 50;
-            player.tint = 0xff00ff;
+        if (godEnabled) {//if god mode
+            player.health = 50;//keep health at 50
+            player.tint = 0xff00ff;//change tint to know we're in GM
         }
         else {
-            player.tint = 0xffffff;
+            player.tint = 0xffffff;//else reset tint
         }
 
-        if (player.health <= 0) {
-            playerDeath();
+        if (player.health <= 0) {//if dead
+            playerDeath();//run death code
         }
 
 
@@ -152,6 +154,7 @@ function update() {
 }
 var dPressed = false, drawNow;
 function drawDebug() {
+    //flip flop method 
     if (game.input.keyboard.isDown(Phaser.Keyboard.D) && dPressed == false) {
         dPressed = true;
         drawNow = !drawNow;
@@ -160,29 +163,35 @@ function drawDebug() {
         dPressed = false;
     }
 
+    //if we want to draw debug boxes
     if (drawNow) {
-        game.debug.body(player);
+        game.debug.body(player);//do that
         game.debug.body(weapon);
         game.debug.body(enemy);
         //game.debug.body(enemyWeapon);
     }
-    else {
-        game.debug.reset();
+    else {//if we dont
+        game.debug.reset();//remove debug boxes
     }
     //console.log(drawNow);
 }
 
+//check for floor collisions appropriately
 var playerTouchingGround, enemyTouchingGround;
 function floorCollisions() {
+    //dont fall through
     playerTouchingGround = game.physics.arcade.collide(player, floor);
     enemyTouchingGround = game.physics.arcade.collide(enemy, floor);
 
+    //if we're not touching the ground, stop the walk animations
     if (!playerTouchingGround) {
         player.animations.stop('walk');
     }
 }
 
+//moves the hitboxes with the player, because they sometimes just broke
 function updateHitboxes() {
+    //reposition every frame
     if (faceRight) {
         weapon.body.x = player.body.x + player.body.width - 50;
     }
@@ -222,7 +231,7 @@ function playerMovement() {
         }
     }
     else if (playerTouchingGround) {
-        player.body.velocity.x *= .8;
+        player.body.velocity.x *= .8;//only apply friction on the ground
     }
 
     if (cursors.left.isUp == true && cursors.right.isUp == true) {
@@ -230,6 +239,7 @@ function playerMovement() {
         player.animations.stop('walk', true);
     }
 
+    //cap out velocity at +/- 300
     if (player.body.velocity.x < -300) {
         player.body.velocity.x = -300;
     }
@@ -242,7 +252,7 @@ function playerMovement() {
     //check for jumps
     if (cursors.up.isDown && player.body.touching.down && playerTouchingGround) {
         player.body.velocity.y = -650;
-        jump.play();
+        jump.play();//play jump sound
 
     }
 
@@ -375,6 +385,8 @@ function playerDeath() {
     healthText.visible = false;
     instruct.visible = false;
     drawNow = false;
+    game.debug.reset();//remove hitboxes
+    
 
     //mute all sounds
     game.sound.mute = true;
