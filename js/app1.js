@@ -73,7 +73,7 @@ function create() {
     hitboxes.enableBody = true;
     player.addChild(hitboxes);
     weapon = hitboxes.create(0, 0, null);
-    weapon.body.setSize(50, 100, 0, player.height / 2 - 10);
+    weapon.body.setSize(100, 100);
 
     //add in a melee enemy
     enemy = game.add.sprite(700, 500, "melee");
@@ -159,7 +159,7 @@ function floorCollisions() {
 
 function updateHitboxes() {
     if (faceRight) {
-        weapon.body.x = player.body.x + player.body.width;
+        weapon.body.x = player.body.x + player.body.width - 50;
     }
     else {
         weapon.body.x = player.body.x - 50;
