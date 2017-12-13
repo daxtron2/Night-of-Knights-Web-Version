@@ -312,7 +312,7 @@ function playerAttack() {
 }
 var enemyMoveWeight = 1.0;
 function enemyMovement() {
-    if (player.visible) {
+    if (player.visible && game.physics.arcade.overlap(enemy, player) == false) {
         if (player.position.x > enemy.position.x) {
             enemy.scale.x = -7;
             enemy.body.velocity.x = 150 * enemyMoveWeight;
@@ -321,6 +321,10 @@ function enemyMovement() {
             enemy.scale.x = 7;
             enemy.body.velocity.x = -150 * enemyMoveWeight;
         }
+    }
+    else
+    {
+        enemy.body.velocity.x = 0;
     }
 }
 
