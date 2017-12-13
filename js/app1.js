@@ -14,13 +14,13 @@ function preload() {
     game.load.spritesheet("player", "images/playerMove.png", 19, 28, 5);
     cursors = game.input.keyboard.createCursorKeys();
 }
-var player, floor, enemy, attack, enemyAttackTimer, weapon, hitboxes, healthText, enemyWeapon, playerHurt, enemyHurt, whiff, jump;
+var player, floor, enemy, attack, enemyAttackTimer, weapon, hitboxes, healthText, enemyWeapon, playerHurt, enemyHurt, whiff, jump, fog, instruct;
 var faceRight = true;
 function create() {
     //initialize the physics system
     game.physics.startSystem(Phaser.Physics.ARCADE);
     //add the background
-    game.add.sprite(0, 0, "fog");
+    fog = game.add.sprite(0, 0, "fog");
 
     //add the floor
     floor = game.add.sprite(0, game.world.height - 134, "floor");
@@ -82,8 +82,6 @@ function create() {
     enemy.scale.setTo(7, 7);
     enemy.pivot.set(8, 9);
 
-
-
     //add health to enemy
     enemy.health = 10;
 
@@ -101,7 +99,7 @@ function create() {
     healthText.addColor("#ffffff", 0);
 
     //create more text for controls
-    var instruct = game.add.text(game.width - 400, 0, "Arrow Keys to move\nLeft click to attack\nD to draw hitboxes\nGain some health every 5 kills\nPress G to enable God mode");
+    instruct = game.add.text(game.width - 400, 0, "Arrow Keys to move\nLeft click to attack\nD to draw hitboxes\nGain some health every 5 kills\nPress G to enable God mode");
     instruct.addColor("#ffffff", 0);
 
 
@@ -115,6 +113,8 @@ function create() {
     var tintTimer = game.time.create(false);
     tintTimer.loop(700, resetTint, this);
     tintTimer.start();
+
+
 
 }
 var killsDisplay = 0;
@@ -318,9 +318,6 @@ function enemyMovement() {
             enemy.body.velocity.x = -150 * enemyMoveWeight;
         }
     }
-    else{
-        enemy.body.velocity.x = 0;
-    }
 }
 
 function enemyAttack() {
@@ -350,7 +347,24 @@ function enableGod() {
 }
 
 function playerDeath() {
-    game.add.text(game.width / 2, game.height / 2, "GAME OVER");
-    player.visible = false;
+    //draw the game over screen
+    var gameOverText = game.add.text((game.width / 2)-130, game.height / 2-50, "GAME OVER")
+    gameOverText.fontSize = 50;    
+    gameOverText.addColor("#ffffff", 0);
+
+    var playAgainText = game.add.text((game.width/2)-200, game.height/2 +25, "Refresh page to play again!");
+    playAgainText.fontSize = 35;
+    playAgainText.addColor("#ffffff",0);
+
+    //stop enemy from attacking after game over
     enemyAttackTimer.stop();
+
+    //make everything else invisible
+    player.visible = false;
+    fog.visible = false;
+    floor.visible = false;
+    enemy.visible = false;
+    healthText.visible = false;
+    instruct.visible = false;
+    drawNow = false;
 }
