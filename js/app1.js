@@ -319,7 +319,7 @@ function playerAttack() {
         }
     }
     if (kills % 5 == 0 && kills != 0) {//if kills is a factor of 5 and not 0
-        player.health += 5;//add some health to the player
+        player.health += 10;//add some health to the player
         kills = 0;//reset the interal counter, not the display
     }
 
