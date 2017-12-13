@@ -19,6 +19,10 @@ var faceRight = true;
 function create() {
     //initialize the physics system
     game.physics.startSystem(Phaser.Physics.ARCADE);
+
+    //stop game from pausing on focus loss, for debug purposes
+    game.stage.disableVisibilityChange = true;
+
     //add the background
     fog = game.add.sprite(0, 0, "fog");
 
@@ -117,34 +121,34 @@ function create() {
 
 
 }
-var killsDisplay = 0;
+var killsDisplay = 0, gameOver = false;
 function update() {
+    if (!gameOver) {
+        floorCollisions();//collide our player and enemy with floor so they dont fall
+        playerMovement();//handle player input for movement
+        enemyMovement();
+        updateHitboxes();//move the hitboxes with the player
+        playerAttack();//handle player input for attacking, handle collision between enemy and sword
+        drawDebug();
+        enableGod();
 
-    floorCollisions();//collide our player and enemy with floor so they dont fall
-    playerMovement();//handle player input for movement
-    enemyMovement();
-    updateHitboxes();//move the hitboxes with the player
-    playerAttack();//handle player input for attacking, handle collision between enemy and sword
-    drawDebug();
-    enableGod();
+        if (godEnabled) {
+            player.health = 50;
+            player.tint = 0xff00ff;
+        }
+        else {
+            player.tint = 0xffffff;
+        }
 
-    if (godEnabled) {
-        player.health = 50;
-        player.tint = 0xff00ff;
+        if (player.health <= 0) {
+            playerDeath();
+        }
+
+
+        //update the text with new values
+        healthText.setText("Player Health: " + player.health + "\nEnemy Health: " + enemy.health + "\nKills: " + killsDisplay + "\nEnemy Level: " + (Math.round(enemyMoveWeight * 10) / 10));
+
     }
-    else {
-        player.tint = 0xffffff;
-    }
-
-    if (player.health <= 0) {
-        playerDeath();
-    }
-
-
-    //update the text with new values
-    healthText.setText("Player Health: " + player.health + "\nEnemy Health: " + enemy.health + "\nKills: " + killsDisplay + "\nEnemy Level: " + (Math.round(enemyMoveWeight * 10) / 10));
-
-
 }
 var dPressed = false, drawNow;
 function drawDebug() {
@@ -296,7 +300,7 @@ function playerAttack() {
                 killsDisplay++;
             }
         }
-        else{
+        else {
             whiff.play();
         }
     }
@@ -348,13 +352,13 @@ function enableGod() {
 
 function playerDeath() {
     //draw the game over screen
-    var gameOverText = game.add.text((game.width / 2)-130, game.height / 2-50, "GAME OVER")
-    gameOverText.fontSize = 50;    
+    var gameOverText = game.add.text((game.width / 2) - 130, game.height / 2 - 50, "GAME OVER")
+    gameOverText.fontSize = 50;
     gameOverText.addColor("#ffffff", 0);
 
-    var playAgainText = game.add.text((game.width/2)-200, game.height/2 +25, "Refresh page to play again!");
+    var playAgainText = game.add.text((game.width / 2) - 200, game.height / 2 + 25, "Refresh page to play again!");
     playAgainText.fontSize = 35;
-    playAgainText.addColor("#ffffff",0);
+    playAgainText.addColor("#ffffff", 0);
 
     //stop enemy from attacking after game over
     enemyAttackTimer.stop();
@@ -367,4 +371,10 @@ function playerDeath() {
     healthText.visible = false;
     instruct.visible = false;
     drawNow = false;
+
+    //mute all sounds
+    game.sound.mute = true;
+
+    //should stop any code from running past this point
+    gameOver = true;
 }
