@@ -30,11 +30,19 @@ main{
     width: 100%;
 }
 
+.fa-file-text{
+    font-size: 14.3vw;
+}
+
 figure{
     margin: 1vw;
     width: 15vw;
     text-align: justify;
     text-align-last: center;
+}
+
+figcaption{
+    font-size: 20pt;
 }
 
 #landingText{
@@ -43,6 +51,11 @@ figure{
     font-size: 15pt;
     text-align: justify;
     text-align-last: center;
+}
+
+#home{
+    text-align: center;
+    font-size: 20pt;
 }
 
 @media only screen and (max-width: 600px){
@@ -58,5 +71,8 @@ figure{
     }
     main{
         margin-top: 1vh;
+    }
+    .fa-file-text{
+        font-size: 50vw;
     }
 }
