@@ -96,7 +96,7 @@ function create() {
     arrow.pivot.set(8, 9);
     //add health to enemies
     enemy.health = 10;
-    ranged.health = 10;
+    ranged.health = 5;
 
     //Add physics to the base enemies
     game.physics.arcade.enable(enemy);
@@ -188,8 +188,11 @@ function drawDebug() {
         game.debug.body(player);//do that
         game.debug.body(weapon);
         game.debug.body(enemy);
+        if (rangedActive == true)
+        {
         game.debug.body(ranged);
         game.debug.body(arrow);
+        }
         //game.debug.body(enemyWeapon);
     }
     else {//if we dont
@@ -260,7 +263,7 @@ function spawnRanged()
             ranged.scale.x = 7;
         }
         arrow.position.x = ranged.position.x;
-        arrow.position.y = ranged.position.y;
+        arrow.position.y = ranged.position.y + 50;
         rangedAttackTimer.start();
         spawnArrow();
         spawnInt = 2;
@@ -391,15 +394,12 @@ function playerAttack() {
                 killsDisplay++;
             }
         }
-        else {//if we missed the enemy
-            whiff.play();//play the whiff sound
-        }
 
 
         //check for collision between weapon and rangedEnemy
-        var didDamage = game.physics.arcade.overlap(weapon, ranged);
+        var didDamageRanged = game.physics.arcade.overlap(weapon, ranged);
         //if we hit the enemy
-        if (didDamage) {
+        if (didDamageRanged) {
             ranged.health -= 5;//remove some health
             ranged.tint = 0xff0000;//make it red for a little bit
             enemyHurt.play();//play his hurt noise
@@ -420,13 +420,13 @@ function playerAttack() {
                 else{
                     ranged.scale.x = 7;
                 }
-                ranged.health = 10;//reset its health
+                ranged.health = 5;//reset its health
                 enemyMoveWeight += .1;//increase enemy's move speed 
                 kills++;//increment kill counters
                 killsDisplay++;
             }
         }
-        else {//if we missed the enemy
+        if (didDamage == false && didDamageRanged == false){//if we missed the enemy
             whiff.play();//play the whiff sound
         }
 
@@ -486,7 +486,7 @@ function arrowHit()
 function resetTint() {
     player.tint = 0xffffff;
     enemy.tint = 0xffffff;
-    ranged.tiny =  0xffffff;
+    ranged.tint =  0xffffff;
 }
 
 
