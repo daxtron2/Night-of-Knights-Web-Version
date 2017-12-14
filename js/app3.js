@@ -381,6 +381,10 @@ function playerDeath() {
     playAgainText.fontSize = 35;
     playAgainText.addColor("#ffffff", 0);
 
+    var playAgainText = game.add.text((game.width / 2) - 80, game.height / 2 + 100, "Total Kills: " + kills);
+    playAgainText.fontSize = 35;
+    playAgainText.addColor("#ffffff", 0);
+
     //stop enemy from attacking after game over
     enemyAttackTimer.stop();
 
