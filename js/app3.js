@@ -381,7 +381,7 @@ function playerDeath() {
     playAgainText.fontSize = 35;
     playAgainText.addColor("#ffffff", 0);
 
-    var playAgainText = game.add.text((game.width / 2) - 80, game.height / 2 + 100, "Total Kills: " + kills);
+    var playAgainText = game.add.text((game.width / 2) - 80, game.height / 2 + 100, "Total Kills: " + killsDisplay);
     playAgainText.fontSize = 35;
     playAgainText.addColor("#ffffff", 0);
 
