@@ -58,6 +58,40 @@ figcaption{
     font-size: 20pt;
 }
 
+#links{
+    width: 75vw;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 20pt;
+}
+
+ul{
+    list-style-type: none;
+    padding: 0;
+}
+
+li{
+    padding: 0;
+}
+
+.list > li{
+    font-size: 15pt;
+}
+
+.list > ul{
+    list-style-type: circle;
+}
+
+section{
+    text-align: center;
+}
+
+.indiv{
+    font-size: 15pt;
+    text-align: justify;
+    text-align-last: center;
+}
+
 @media only screen and (max-width: 650px){
     body{
         padding: 0;
