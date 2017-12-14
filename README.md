@@ -2,7 +2,7 @@
 # Description: 
 Welcome to the documentation page for Night of Knights: Web Version! This site hosts three different versions of the game, created with the JavaScript framework Phaser. In order to create this project, we had to learn about how Phaser many different systems work in conjunction with one another. Many of the assets were already made as we took them from our old project for GDAPS2, which allowed us to focus on the code and design of how the game plays. Our original idea was to recreate, as accurately as possible, our original game. Instead, we ended up using what we learned from IGME-230 to create something more suitabl to a browser based environment and web userbase. Every bit of this project was created by us, no code, images, sounds, or animations were from an outside source. Versions 2 and 3 of the game both use version 1 as a baseline, and then add extra features to make them play / look different.
 
-# Sketches: 
+# Images: 
 ![Sketches](https://raw.githubusercontent.com/daxtron2/Night-of-Knights-Web-Version/master/Capture.PNG?token=ABR69SutWprVUAgSPBl7CGc51hqjeP1Oks5aJwFfwA%3D%3D)
 
 # TJ Wolschon's Efforts and Responsibilities
