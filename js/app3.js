@@ -5,7 +5,11 @@ function preload() {
     //load all the things
     game.load.image("fog", "images/fog.png");
     game.load.image("floor", "images/background_new.png");
-    game.load.image("melee", "images/meleeEnemy.png")
+    game.load.image("melee", "images/meleeEnemy.png");
+    game.load.image("ranged", "images/rangedEnemy.png");
+    game.load.image("arrow", "images/arrow.png");
+    game.load.image("tree", "images/tree.png");
+
     game.load.audio("playerHurt", "audio/playerHurt.wav");
     game.load.audio("enemyHurt", "audio/enemyHurt.wav");
     game.load.audio("whiff", "audio/whiff.wav");
@@ -15,7 +19,7 @@ function preload() {
     game.load.spritesheet("player", "images/playerMove.png", 19, 28, 5);
     cursors = game.input.keyboard.createCursorKeys();
 }
-var player, floor, enemy, attack, enemyAttackTimer, weapon, hitboxes, healthText, enemyWeapon, playerHurt, enemyHurt, whiff, jump, fog, instruct;
+var player, floor, enemy, attack, enemyAttackTimer, weapon, hitboxes, healthText, enemyWeapon, playerHurt, enemyHurt, whiff, jump, fog, instruct, ranged, arrow;
 var faceRight = true;
 function create() {
     //initialize the physics system
@@ -80,24 +84,35 @@ function create() {
     weapon = hitboxes.create(0, 0, null);
     weapon.body.setSize(100, 100);
 
-    //add in a melee enemy
+    //add in a melee and ranged enemy
     enemy = game.add.sprite(700, 500, "melee");
-
-    //scale the enemy up
+    ranged = game.add.sprite(700, 600, "ranged");
+    arrow = game.add.sprite(700, 600, "arrow");
+    //scale the enemies up
     enemy.scale.setTo(7, 7);
     enemy.pivot.set(8, 9);
-
-    //add health to enemy
+    ranged.scale.setTo(7, 7);
+    ranged.pivot.set(8, 9);
+    arrow.scale.setTo(7, 7);
+    arrow.pivot.set(8, 9);
+    //add health to enemies
     enemy.health = 10;
+    ranged.health = 5;
 
-    //Add physics to the base enemy
+    //Add physics to the base enemies
     game.physics.arcade.enable(enemy);
+    game.physics.arcade.enable(ranged);
+    game.physics.arcade.enable(arrow);
     enemy.body.gravity.y = 1000;
+    ranged.body.gravity.y = 1000;
+   // arrow.body.gravity.y = 20;arrow
     enemy.body.collideWorldBounds = true;
+    ranged.body.collideWorldBounds = true;
 
-    //change enemy's hitbox
+    //change enemies' hitbox
     enemy.body.setSize(7, 10, 3, 11);
-
+    ranged.body.setSize(7, 10, 3, 11);
+    arrow.body.setSize(7, 5, 3, 11);
 
     //create the text in top left
     healthText = game.add.text(10, 0, "Player Health: " + player.health + "\nEnemy Health: " + enemy.health + "\nKills: 0");
@@ -111,8 +126,9 @@ function create() {
 
     //start a timer to make enemy attack every second
     enemyAttackTimer = game.time.create(false);
-
+    rangedAttackTimer = game.time.create(false);
     enemyAttackTimer.loop(1000, enemyAttack, this);
+    rangedAttackTimer.loop(6000, spawnArrow, this);
     enemyAttackTimer.start();
 
     //reset character tints every 700ms
@@ -121,7 +137,15 @@ function create() {
     tintTimer.start();
 
 
+    //set the ranged enemy to be invisible at the start.
+    ranged.visible = false;
+    arrow.visible = false;
+   // ranged.position.x = -30;
 
+    for(var i = 0; i < 10; i++){
+        var x = Math.random() * game.width;
+        game.add.sprite(x, 550, "tree");
+    }
 }
 var killsDisplay = 0, gameOver = false;
 function update() {
@@ -133,6 +157,8 @@ function update() {
         playerAttack();//handle player input for attacking, handle collision between enemy and sword
         drawDebug();
         enableGod();
+        spawnRanged();
+        arrowHit();
 
         if (godEnabled) {//if god mode
             player.health = 50;//keep health at 50
@@ -168,6 +194,11 @@ function drawDebug() {
         game.debug.body(player);//do that
         game.debug.body(weapon);
         game.debug.body(enemy);
+        if (rangedActive == true)
+        {
+        game.debug.body(ranged);
+        game.debug.body(arrow);
+        }
         //game.debug.body(enemyWeapon);
     }
     else {//if we dont
@@ -177,12 +208,12 @@ function drawDebug() {
 }
 
 //check for floor collisions appropriately
-var playerTouchingGround, enemyTouchingGround;
+var playerTouchingGround, enemyTouchingGround, rangedTouchingGround;
 function floorCollisions() {
     //dont fall through
     playerTouchingGround = game.physics.arcade.collide(player, floor);
     enemyTouchingGround = game.physics.arcade.collide(enemy, floor);
-
+    rangedTouchingGround = game.physics.arcade.collide(ranged, floor);
     //if we're not touching the ground, stop the walk animations
     if (!playerTouchingGround) {
         player.animations.stop('walk');
@@ -205,6 +236,61 @@ function addGravity() {
     //player.body.gravity.y *= 1.3;
     //player.body.gravity.y += 1009;
     player.body.velocity.y += 25;
+}
+
+var spawnInt = 0;
+var rangedActive = false;
+function spawnRanged()
+{
+    //Console.Log("Method Working");
+    if (killsDisplay == 10 && spawnInt == 0)
+    {
+        spawnInt = 1;
+        rangedActive = true;
+    }
+    if (spawnInt == 1)
+    {
+        ranged.visible = true;
+        arrow.visible = true;
+        ranged.position.y = 600;
+        if (Math.random() > .5) {
+            ranged.position.x = -30;
+        }
+        else {
+            ranged.position.x = game.width + 30;
+        }
+
+        if (player.position.x > ranged.position.x)
+        {
+            ranged.scale.x = -7;
+        }
+        else
+        {
+            ranged.scale.x = 7;
+        }
+        arrow.position.x = ranged.position.x;
+        arrow.position.y = ranged.position.y + 50;
+        rangedAttackTimer.start();
+        spawnArrow();
+        spawnInt = 2;
+    }
+}
+
+function spawnArrow()
+{
+  //  arrow.body.collideWorldBounds = true;
+  arrow.position.x = ranged.position.x;
+  arrow.position.y = ranged.position.y + 50;
+    if (player.position.x > ranged.position.x)
+    {
+        arrow.body.velocity.x = 300 * enemyMoveWeight;
+        arrow.scale.x = -7;
+    }
+    else{
+        arrow.body.velocity.x = -300 * enemyMoveWeight;
+        arrow.scale.x = 7;
+    }
+
 }
 
 function playerMovement() {
@@ -314,9 +400,45 @@ function playerAttack() {
                 killsDisplay++;
             }
         }
-        else {//if we missed the enemy
+
+
+        //check for collision between weapon and rangedEnemy
+        var didDamageRanged = game.physics.arcade.overlap(weapon, ranged);
+        //if we hit the enemy
+        if (didDamageRanged) {
+            ranged.health -= 5;//remove some health
+            ranged.tint = 0xff0000;//make it red for a little bit
+            enemyHurt.play();//play his hurt noise
+
+            //if the enemy is dead
+            if (ranged.health <= 0) {
+                //50/50 shot of where the "new" one spawns, left or right side
+                if (Math.random() > .5) {
+                    ranged.position.x = -50;
+                }
+                else {
+                    ranged.position.x = game.width + 50;
+                }
+                if (player.position.x > ranged.position.x)
+                {
+                    ranged.scale.x = -7;
+                }
+                else{
+                    ranged.scale.x = 7;
+                }
+                ranged.health = 5;//reset its health
+                enemyMoveWeight += .1;//increase enemy's move speed 
+                kills++;//increment kill counters
+                killsDisplay++;
+            }
+        }
+        if (didDamage == false && didDamageRanged == false){//if we missed the enemy
             whiff.play();//play the whiff sound
         }
+
+
+
+
     }
     if (kills % 5 == 0 && kills != 0) {//if kills is a factor of 5 and not 0
         player.health += 10;//add some health to the player
@@ -351,11 +473,26 @@ function enemyAttack() {
     }
 
 }
+function arrowHit()
+{
+    if(rangedActive == true)
+    {
+    if (game.physics.arcade.overlap(arrow, player)) {//if enemy hits player
+        player.health -= 5;//player loses some health
+        player.tint = 0xff0000;//player sprite indicates a hit
+        playerHurt.play();//player hurt sound plays
+
+        //move the arrow off-screen;
+        arrow.position.y = 1000;
+    }
+}
+}
 
 //runs every so often to reset the sprite tints to normal
 function resetTint() {
     player.tint = 0xffffff;
     enemy.tint = 0xffffff;
+    ranged.tint =  0xffffff;
 }
 
 
@@ -393,6 +530,8 @@ function playerDeath() {
     fog.visible = false;
     floor.visible = false;
     enemy.visible = false;
+    ranged.visible = false;
+    arrow.visible = false;
     healthText.visible = false;
     instruct.visible = false;
     drawNow = false;
