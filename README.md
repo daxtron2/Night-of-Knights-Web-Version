@@ -1,18 +1,30 @@
 # Night-of-Knights-Web-Version
 # Description: 
-For this project, we will be recreating our GDAPS2 game in Phaser, a JavaScript framework for desktop and mobile game development. There will be 3 different versions of the game, each with different properties that make the game play in different ways. We chose to recreate our GDAPS2 game, Night of Knights, because it allowed us to have a product that we know how it should feel, and what we can do differently to make it web and mobile friendly. Night of Knights is an 2D sidescroller in which you control a knight, fighting endless waves of enemies. There are 3 different enemy types, A knight, an archer, and the Archmage. The archer and archmage both use ranged attack styles while the knight is a melee fighter. The player earns points by killing these enemies and advancing forward. Almost all of the assets for our recreation and improvements are already made, allowing us to focus on the design, balancing, and coding aspects of this particular project.
+Welcome to the documentation page for Night of Knights: Web Version! This site hosts three different versions of the game, created with the JavaScript framework Phaser. In order to create this project, we had to learn about how Phaser many different systems work in conjunction with one another. Many of the assets were already made as we took them from our old project for GDAPS2, which allowed us to focus on the code and design of how the game plays. Our original idea was to recreate, as accurately as possible, our original game. Instead, we ended up using what we learned from IGME-230 to create something more suitabl to a browser based environment and web userbase. Every bit of this project was created by us, no code, images, sounds, or animations were from an outside source. Versions 2 and 3 of the game both use version 1 as a baseline, and then add extra features to make them play / look different.
 
 # Sketches: 
 ![Sketches](https://raw.githubusercontent.com/daxtron2/Night-of-Knights-Web-Version/master/Capture.PNG?token=ABR69SutWprVUAgSPBl7CGc51hqjeP1Oks5aJwFfwA%3D%3D)
 
-# Responsibilities: 
-- Both:
-  - Recreating the original game in JavaScript using the Phaser framework
-  - Each of us will create our own separate, “improved” version of the game in order to test out different features and functionalities more quickly.
-- In the end, we should have 3 distinct versions.
-  - One which is a recreation of the original
-  - One with features created by TJ to improve the original
-  - One with features created by Mike to improve the original
+# TJ Wolschon's Efforts and Responsibilities
+- Create Repo and install Phaser
+- Sprites
+- Movement
+- HTML and Styling
+- Basic enemy AI
+- Collisions
+- Hitboxes
+- On-Screen text
+- Player Attacking
+- Order of code execution
+- Debug Drawing
+- Sound
+- Player Death and Game Over
+- God Mode
+- Increasing Enemy Difficulty
+- Version 3
+- Home and Documentation pages
+- Mobile Layout of pages
+- Bug Fixes
 
-# Need to learn: 
-The various built in functions of Phaser that will allow us to accurately recreate and improve upon our original design.
+# Mike Schek's Efforts and Responsibilities
+While working on the project, I primarily focused on getting the player character functioning in the first iteration of the project. This involved learning how to use the phaser framework to have sprites moving and playing sprite animations, specifically for movement and attacking. While working on getting the player movement functioning I also worked on the physics of the player movement, and limiting character functionality, such that the player would not be able to jump high in the air several times in succession. I also assisted with tweaking some of the combat mechanics such as the way in which the enemy knight moves towards the player so that it does not bounce back and forth, a nd instead stops at a certain range. I also worked on getting the base setup for the melee knight enemy in place, such as health and physics. In addition to the portions of the first iteration that I worked on, I also wrote the additions to the game that were put in place for the second iteration. I designed the second iteration such that a new type of enemy, the ranged archer, spawns in on either end of the screen after the melee knight has been killed ten times. This new enemy fires an arrow projectile in the direction of the player, which causes damage to the player if the two sprites overlap. Along with these specific tasks, I also worked on general bug fixes and optimizations for the game throughout the project, and worked with Tj on several bugs that I was not able to finish on my own.
